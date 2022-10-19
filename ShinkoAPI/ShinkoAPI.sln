@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShinkoAPI", "ShinkoAPI.csproj", "{466CB03F-2EF5-47A7-AD81-0F4758CE1EBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{466CB03F-2EF5-47A7-AD81-0F4758CE1EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466CB03F-2EF5-47A7-AD81-0F4758CE1EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466CB03F-2EF5-47A7-AD81-0F4758CE1EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466CB03F-2EF5-47A7-AD81-0F4758CE1EBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
