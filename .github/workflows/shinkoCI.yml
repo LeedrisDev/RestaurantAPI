@@ -23,6 +23,7 @@ jobs:
 
   test:
     name: 'Test'
+    needs: build
 
     runs-on: ubuntu-latest
 
