@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using ShinkoAPI.Business;
+using ShinkoAPI.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddSwaggerGen(options =>
 // Dependency injection
 builder.Services.AddHttpClient();
 builder.Services.AddTransient<IShinkoBusiness, ShinkoBusiness>();
+builder.Services.AddTransient<IShinkoData, ShinkoData>();
 
 var app = builder.Build();
 
