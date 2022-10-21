@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 #pragma warning disable CS1591
-public class DatesAvailabilitiesModel
+public class DateAvailabilitiesModel
 {
     [JsonProperty("date")] 
     public DateTimeOffset Date { get; set; }
@@ -24,7 +24,7 @@ public class Shift
     public long Id { get; set; }
 
     [JsonProperty("possible_guests")] 
-    public List<long> PossibleGuests { get; set; } = null!;
+    public List<int> PossibleGuests { get; set; } = null!;
 
     [JsonProperty("waitlist_possible_guests")]
     public List<object> WaitlistPossibleGuests { get; set; } = null!;
