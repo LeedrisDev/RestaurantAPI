@@ -1,9 +1,18 @@
 namespace ShinkoAPI.Utils;
 
-public class AppConstants
+/// <summary>
+/// Class that regroup all constants of the application
+/// </summary>
+public static class AppConstants
 {
     public static class Urls
     {
-        public const string ShinkoParis = "https://www.shinkoparis.fr";
+        public static string GetAvailabilitiesSummary(string beginDate, string endDate)
+        {
+            return "https://bookings-middleware.zenchef.com/getAvailabilitiesSummary?restaurantId=356608&date_begin="
+                + beginDate
+                + "&date_end="
+                + endDate;
+        }
     }
 }
