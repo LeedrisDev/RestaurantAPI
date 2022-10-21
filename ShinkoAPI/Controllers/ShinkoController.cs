@@ -23,8 +23,8 @@ public class ShinkoController: ControllerBase
     /// <summary>
     /// Get available reservations for Shinko
     /// </summary>
-    /// <param name="beginDate">Wanted begin date, in format 'dd/mm/yyyy'</param>
-    /// <param name="endDate">Wanted end date, in format 'dd/mm/yyyy'</param>
+    /// <param name="beginDate">Wanted begin date, in format 'dd-mm-yyyy'</param>
+    /// <param name="endDate">Wanted end date, in format 'dd-mm-yyyy'</param>
     /// <param name="nbGuests">Wanted number of guests for thw reservation</param>
     /// <param name="isLunch">Is reservation for a lunch</param>
     /// <param name="isDinner">Is reservation for a dinner</param>
@@ -52,11 +52,13 @@ public class ShinkoController: ControllerBase
             return BadRequest(new ErrorResponse("Wrong endDate format, should be 'dd-mm-yyyy'"));
         if (DateTime.Compare(beginDateDatetime, endDateDatetime) > 0)
             return BadRequest(new ErrorResponse("beginDate should be before endDate"));
+        if ((endDateDatetime - beginDateDatetime).Days > 40)
+            return BadRequest(new ErrorResponse("The maximum number of days between beginDate and endDate can't exceed 40"));
         if (nbGuests is < 2 or > 6)
             return BadRequest(new ErrorResponse("nbGuests should be between 2 and 6"));
         if (!isDinner && !isLunch)
             return BadRequest(new ErrorResponse("isLunch and isDinner cannot be both false"));
-        
+
         var reservations = await _shinkoBusiness.GetAvailableReservations(beginDateDatetime, endDateDatetime, nbGuests, isLunch, isDinner);
         
         return Ok(new ReservationsResponse(reservations));
