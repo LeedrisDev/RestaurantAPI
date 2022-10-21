@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
+using ShinkoAPI.Business;
 using ShinkoAPI.Models;
-using ShinkoAPI.Utils;
 
 namespace ShinkoAPI.Controllers;
 
@@ -13,24 +12,35 @@ namespace ShinkoAPI.Controllers;
 public class ShinkoController: ControllerBase
 {
     private readonly ILogger<ShinkoController> _logger;
+    private readonly IShinkoBusiness _shinkoBusiness;
     
-    public ShinkoController(ILogger<ShinkoController> logger)
+    public ShinkoController(ILogger<ShinkoController> logger, IShinkoBusiness shinkoBusiness)
     {
         _logger = logger;
+        _shinkoBusiness = shinkoBusiness;
     }
     
     /// <summary>
     /// Get available reservations for Shinko
     /// </summary>
-    /// <param name="beginDate">Wanted begin date, in format dd/mm/yyyy</param>
-    /// <param name="endDate">Wanted end date, in format dd/mm/yyyy</param>
+    /// <param name="beginDate">Wanted begin date, in format 'dd/mm/yyyy'</param>
+    /// <param name="endDate">Wanted end date, in format 'dd/mm/yyyy'</param>
+    /// <param name="nbGuests">Wanted number of guests for thw reservation</param>
+    /// <param name="isLunch">Is reservation for a lunch</param>
+    /// <param name="isDinner">Is reservation for a dinner</param>
     /// <returns>Available reservations</returns>
     /// <response code="200">Returns the available reservations</response>
     /// <response code="400">If the beginDate or endDate are incorrect</response>
     [HttpGet("reservations")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReservationsResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorResponse))]
-    public async Task<IActionResult> GetAvailableReservations([Required] string beginDate, [Required] string endDate)
+    public async Task<IActionResult> GetAvailableReservations(
+        [Required] string beginDate, 
+        [Required] string endDate,
+        [Required] int nbGuests,
+        [Required] bool isLunch = true,
+        [Required] bool isDinner = true
+        )
     {
         var frFr = new CultureInfo("fr-FR");
         DateTime beginDateDatetime;
@@ -42,26 +52,13 @@ public class ShinkoController: ControllerBase
             return BadRequest(new ErrorResponse("Wrong endDate format, should be 'dd-mm-yyyy'"));
         if (DateTime.Compare(beginDateDatetime, endDateDatetime) > 0)
             return BadRequest(new ErrorResponse("beginDate should be before endDate"));
+        if (nbGuests is < 2 or > 6)
+            return BadRequest(new ErrorResponse("nbGuests should be between 2 and 6"));
+        if (!isDinner && !isLunch)
+            return BadRequest(new ErrorResponse("isLunch and isDinner cannot be both false"));
         
-        return Ok("Hello World");
-    }
-
-    [HttpGet("TestEndpoint")]
-    public async Task<IActionResult> TestEndpoint()
-    {
-        HttpClient client = new HttpClient();
-        var htlmDoc = new HtmlDocument();
+        var reservations = await _shinkoBusiness.GetAvailableReservations(beginDateDatetime, endDateDatetime, nbGuests, isLunch, isDinner);
         
-        var response = await client.GetAsync(AppConstants.Urls.ShinkoParis);
-        var content = await response.Content.ReadAsStringAsync();
-        htlmDoc.LoadHtml(content);
-    
-        var reservationUrl = AppConstants.Urls.ShinkoParis + htlmDoc.DocumentNode
-            .SelectSingleNode("/html/body/div[2]/div/div[2]/div/div[2]/a")
-            .Attributes["href"].Value;
-        
-        _logger.LogInformation(reservationUrl);
-        
-        return Ok("Hello World");
+        return Ok(new ReservationsResponse(reservations));
     }
 }
