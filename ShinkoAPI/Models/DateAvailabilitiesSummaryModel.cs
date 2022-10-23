@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 #pragma warning disable CS1591
-public class DateAvailabilitiesModel
+public class DateAvailabilitiesSummaryModel
 {
     [JsonProperty("date")] 
     public DateTimeOffset Date { get; set; }
