@@ -17,7 +17,14 @@ public class ShinkoBusiness: IShinkoBusiness
     }
     
     /// <inheritdoc />
-    public async Task<IList<DateTime>> GetAvailableReservations(DateTime beginDate, DateTime endDate, int nbGuests, bool isLunch, bool isDinner)
+    public async Task<IList<DateTime>> GetAvailableReservationsSummary(DateTime beginDate, DateTime endDate, int nbGuests, bool isLunch, bool isDinner)
+    {
+        return await _shinkoData.GetAvailableReservationsSummary(beginDate, endDate, nbGuests, isLunch, isDinner);
+    }
+    
+    /// <inheritdoc />
+    public async Task<IList<DateTime>> GetAvailableReservations(DateTime beginDate, DateTime endDate, int nbGuests,
+        bool isLunch, bool isDinner)
     {
         return await _shinkoData.GetAvailableReservations(beginDate, endDate, nbGuests, isLunch, isDinner);
     }
