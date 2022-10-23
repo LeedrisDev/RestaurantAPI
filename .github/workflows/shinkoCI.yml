@@ -15,9 +15,9 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - name: Install dependencies
-        run: dotnet restore ./ShinkoAPI/ShinkoAPI.csproj
+        run: dotnet restore ./Restaurants/ShinkoAPI/ShinkoAPI.csproj
       - name: Build
-        run: dotnet build ./ShinkoAPI/ShinkoAPI.csproj --configuration Release --no-restore
+        run: dotnet build ./Restaurants/ShinkoAPI/ShinkoAPI.csproj --configuration Release --no-restore
       # - name: Test
       #   run: dotnet test --no-restore --verbosity normal
 
