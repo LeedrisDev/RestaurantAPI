@@ -10,9 +10,17 @@ public static class AppConstants
         public static string GetAvailabilitiesSummary(string beginDate, string endDate)
         {
             return "https://bookings-middleware.zenchef.com/getAvailabilitiesSummary?restaurantId=356608&date_begin="
-                + beginDate
-                + "&date_end="
-                + endDate;
+                   + beginDate
+                   + "&date_end="
+                   + endDate;
+        }
+
+        public static string GetAvailabilities(string beginDate, string endDate)
+        {
+            return "https://bookings-middleware.zenchef.com/getAvailabilities?restaurantId=356608&date_begin="
+                   + beginDate
+                   + "&date_end="
+                   + endDate;
         }
     }
 }
