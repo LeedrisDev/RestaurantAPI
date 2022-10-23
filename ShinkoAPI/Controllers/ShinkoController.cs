@@ -14,6 +14,11 @@ public class ShinkoController: ControllerBase
     private readonly ILogger<ShinkoController> _logger;
     private readonly IShinkoBusiness _shinkoBusiness;
     
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="shinkoBusiness"></param>
     public ShinkoController(ILogger<ShinkoController> logger, IShinkoBusiness shinkoBusiness)
     {
         _logger = logger;
@@ -22,6 +27,50 @@ public class ShinkoController: ControllerBase
     
     /// <summary>
     /// Get available reservations for Shinko
+    /// </summary>
+    /// <param name="beginDate">Wanted begin date, in format 'dd-mm-yyyy'</param>
+    /// <param name="endDate">Wanted end date, in format 'dd-mm-yyyy'</param>
+    /// <param name="nbGuests">Wanted number of guests for thw reservation</param>
+    /// <param name="isLunch">Is reservation for a lunch</param>
+    /// <param name="isDinner">Is reservation for a dinner</param>
+    /// <returns>Available reservations</returns>
+    /// <response code="200">Returns the available reservations</response>
+    /// <response code="400">If the beginDate or endDate are incorrect</response>
+    [HttpGet("reservations/summary")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReservationsResponse))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorResponse))]
+    public async Task<IActionResult> GetAvailableReservationsSummary(
+        [Required] string beginDate, 
+        [Required] string endDate,
+        [Required] int nbGuests,
+        [Required] bool isLunch = true,
+        [Required] bool isDinner = true
+        )
+    {
+        var frFr = new CultureInfo("fr-FR");
+        DateTime beginDateDatetime;
+        DateTime endDateDatetime;
+
+        if (!DateTime.TryParseExact(beginDate, "dd-MM-yyyy", frFr, DateTimeStyles.None, out beginDateDatetime))
+            return BadRequest(new ErrorResponse("Wrong beginDate format, should be 'dd-mm-yyyy'"));
+        if (!DateTime.TryParseExact(endDate, "dd-MM-yyyy", frFr, DateTimeStyles.None, out endDateDatetime))
+            return BadRequest(new ErrorResponse("Wrong endDate format, should be 'dd-mm-yyyy'"));
+        if (DateTime.Compare(beginDateDatetime, endDateDatetime) > 0)
+            return BadRequest(new ErrorResponse("beginDate should be before endDate"));
+        if ((endDateDatetime - beginDateDatetime).Days > 40)
+            return BadRequest(new ErrorResponse("The maximum number of days between beginDate and endDate can't exceed 40"));
+        if (nbGuests is < 2 or > 6)
+            return BadRequest(new ErrorResponse("nbGuests should be between 2 and 6"));
+        if (!isDinner && !isLunch)
+            return BadRequest(new ErrorResponse("isLunch and isDinner cannot be both false"));
+
+        var reservations = await _shinkoBusiness.GetAvailableReservationsSummary(beginDateDatetime, endDateDatetime, nbGuests, isLunch, isDinner);
+        
+        return Ok(new ReservationsResponse(reservations));
+    }
+    
+    /// <summary>
+    /// Get available reservations summary for Shinko
     /// </summary>
     /// <param name="beginDate">Wanted begin date, in format 'dd-mm-yyyy'</param>
     /// <param name="endDate">Wanted end date, in format 'dd-mm-yyyy'</param>
