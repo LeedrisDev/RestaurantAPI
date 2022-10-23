@@ -21,7 +21,7 @@ dotnet run ./Restaurants/ShinkoAPI/ShinkoAPI.csproj --configuration Release
 ---
 
 ## Client
-Before everything, if you want to use the client, you'll need to defin some environment variables :
+Before everything, if you want to use the client, you'll need to define some environment variables :
 ```sh
 export BEGIN_DATE="01-11-2022"
 export END_DATE="30-11-2022"
