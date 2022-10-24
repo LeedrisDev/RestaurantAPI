@@ -3,8 +3,8 @@ name: Shinko CI
 on: 
   push:
     paths:
-      - './.github/workflows/shinkoCI.yml'
-      - './Restaurants/ShinkoAPI'
+      - 'Restaurants/ShinkoAPI/**'
+      - '.github/workflows/shinkoCI.yml'
 
 jobs:
   build:
