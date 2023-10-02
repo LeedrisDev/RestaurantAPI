@@ -1,10 +1,19 @@
 name: Shinko CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - feature/*
+      - release/*
+    paths:
+      - .github/workflows/shinkoCI.yml
+      - Restaurants/ShinkoAPI/**
 
 jobs:
   build:
-    name: 'Build'
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,7 +30,7 @@ jobs:
         run: dotnet build ./Restaurants/ShinkoAPI/ShinkoAPI.csproj --configuration Release --no-restore
 
   test:
-    name: 'Test'
+    name: Test
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -62,5 +71,5 @@ jobs:
           file: Restaurants/ShinkoAPI/Dockerfile
           push: true
           tags: |
-            docker-registry.leedrisdev.engineer/restaurants_shinkoapi:release-${{ github.run_number }}
-            docker-registry.leedrisdev.engineer/restaurants_shinkoapi:latest
+            registry.leedrisdev.com/restaurants_shinkoapi:release-${{ github.run_number }}
+            registry.leedrisdev.com/restaurants_shinkoapi:latest
