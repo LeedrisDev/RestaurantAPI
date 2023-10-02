@@ -1,6 +1,15 @@
 name: Client CI
 
-on: [push]
+on:
+  push: 
+    branches:
+      - master
+      - develop
+      - feature/*
+      - release/*
+    paths:
+      - .github/workflows/ClientCI.yml
+      - Restaurants/Client/**
 
 jobs:
   build:
